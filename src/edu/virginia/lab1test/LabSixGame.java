@@ -1,22 +1,24 @@
 package edu.virginia.lab1test;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
+import Tweens.Tween;
+import Tweens.TweenJuggler;
+import Tweens.TweenTransitions;
+import Tweens.TweenableParams;
 import edu.virginia.engine.display.AnimatedSprite;
 import edu.virginia.engine.display.Game;
 import edu.virginia.engine.display.Sprite;
 import edu.virginia.engine.events.Event;
 import edu.virginia.engine.util.GameClock;
-public class LabFiveGame extends Game {
-	
 
-	
-	
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
+public class LabSixGame extends Game {
+
+
+
+
 	/* Create a sprite object for our game. We'll use mario */
 	Sprite mario = new Sprite("Mario", "Mario.png");
 	Coin myCoin = new Coin("Coin", "Coin.png");
@@ -29,21 +31,22 @@ public class LabFiveGame extends Game {
 	Platformer platform2 = new Platformer("Rectangele", "platform.png");
 	SoundManagerClass music = new SoundManagerClass();
 	Sprite marioBackground = new Sprite("Background","BowserCastle2.png");
-	
+
 	private AnimatedSprite animation;
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 	static GameClock clock;
 	/**
 	 * Constructor. See constructor in Game.java for details on the parameters given
 	 * */
-	public LabFiveGame() {
+	TweenJuggler tweenJuggler;
+	public LabSixGame() {
 		super("Lab Four Test Game", 800, 600);
 		PickedUpEvent = new Event();
         PickedUpEvent.setEventType("CoinPickedUp");
@@ -80,7 +83,17 @@ public class LabFiveGame extends Game {
 		
 
 		animation.setPositionX(50);
-		animation.setPositionY(220);
+		animation.setPositionY(0);
+
+
+		tweenJuggler = new TweenJuggler();
+		TweenTransitions animationIntro = new TweenTransitions("linearTransition");
+		Tween animationTween = new Tween(animation, animationIntro);
+		animationTween.animate(TweenableParams.Y, 0, 245, 5);
+
+		TweenTransitions coinCatch = new TweenTransitions("easeInOut");
+		Tween coinTween = new Tween(myCoin, coinCatch);
+		tweenJuggler.add(animationTween);
 
 		
 	}
@@ -92,11 +105,12 @@ public class LabFiveGame extends Game {
 	@Override
 	public void update(ArrayList<String> pressedKeys){
 		super.update(pressedKeys);
-		
+
+
 		/* Make sure mario is not null. Sometimes Swing can auto cause an extra frame to go before everything is initialized */
 		if(mario != null && animation.getImage()!=null){
 			mario.update(pressedKeys);
-			
+			tweenJuggler.nextFrame();
 			animation.update();
 			
 				
@@ -315,7 +329,7 @@ public class LabFiveGame extends Game {
 	public static void main(String[] args) {
 		clock = new GameClock();
 		
-		LabFiveGame game = new LabFiveGame();
+		LabSixGame game = new LabSixGame();
 		
 		
 		game.start();

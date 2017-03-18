@@ -8,6 +8,7 @@ public class Tween {
     DisplayObject sprite;
     TweenTransitions tweenTransitions;
     double percentDone = 0;
+    double startTime = -1;
 
     Tween(DisplayObject object) {
 
@@ -24,15 +25,20 @@ public class Tween {
 
     public void update() {
         if (tweenParam.getParem() == TweenableParams.Y) {
-            sprite.setPositionY(sprite.getPositionY() + tweenTransitions.applyTransition(tweenParam.startVal, tweenParam.endVal, tweenParam.time, percentDone));
-            percentDone+=1;
-            System.out.println(sprite.getPositionY());
+            if (startTime == -1){
+                startTime = (double)System.currentTimeMillis();
+            }
+            percentDone = ((double)System.currentTimeMillis() - startTime)/(tweenParam.time*1000);
+            sprite.setPositionY(tweenParam.startVal - (tweenParam.startVal- tweenParam.endVal)*tweenTransitions.applyTransition(percentDone));
+
+            System.out.println((double)System.currentTimeMillis());
         }
     }
 
 
     public boolean isComplete() {
-        if (percentDone >= 100){
+        if (percentDone >= 1){
+            startTime = -1;
             return true;
         }
         else{
